@@ -10,6 +10,11 @@ buildscript {
     }
 }
 
+// Retreive the test ip from local properties
+def localPropertiesFile = rootProject.file("local.properties")
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(localPropertiesFile))
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.3"
@@ -23,6 +28,8 @@ android {
         multiDexEnabled true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "TEST_IP", localProperties['testIp']
     }
 
     buildTypes {
@@ -48,3 +55,4 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 }
+

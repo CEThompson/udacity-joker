@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             if (myApiService == null) {
                 MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                         new AndroidJsonFactory(), null)
-                        .setRootUrl("http://192.168.0.106:8080/_ah/api/")
+                        .setRootUrl("http://" + BuildConfig.TEST_IP + ":8080/_ah/api/")
                         .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                             @Override
                             public void initialize(AbstractGoogleClientRequest<?> request) throws IOException {
