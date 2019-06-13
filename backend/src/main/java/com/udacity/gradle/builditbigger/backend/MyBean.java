@@ -5,6 +5,8 @@ public class MyBean {
 
     private String myData;
 
+    public MyBean(){myData = "dataString";}
+
     public String getData() {
         return myData;
     }

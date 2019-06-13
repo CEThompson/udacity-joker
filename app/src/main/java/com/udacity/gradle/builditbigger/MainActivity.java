@@ -60,45 +60,7 @@ public class MainActivity extends AppCompatActivity {
         //intent.putExtra(keys.joke_key, joke);
 
         //startActivity(intent);
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
-    }
-
-    class EndpointsAsyncTask extends AsyncTask<Pair<Context,String>, Void, String> {
-        private MyApi myApiService = null;
-        private Context context;
-
-        @Override
-        protected String doInBackground(Pair<Context, String>... params) {
-            if (myApiService == null) {
-                MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
-                        new AndroidJsonFactory(), null)
-                        .setRootUrl("http://" + BuildConfig.TEST_IP + ":8080/_ah/api/")
-                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                            @Override
-                            public void initialize(AbstractGoogleClientRequest<?> request) throws IOException {
-                                request.setDisableGZipContent(true);
-                            }
-                        });
-                myApiService = builder.build();
-            }
-
-            context = params[0].first;
-            String name = params[0].second;
-
-            try {
-                Log.e("MainActivity", "trying to return api service string");
-                return myApiService.sayHi(name).execute().getData();
-            } catch (IOException e) {
-                Log.e("MainActivity", "catching IO exception e");
-                return e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            Toast.makeText(context, s, Toast.LENGTH_LONG).show();
-            Log.e("MainActivity", s);
-        }
+        new EndpointsAsyncTask().execute(this);
     }
 
 }
