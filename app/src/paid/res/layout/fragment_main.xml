@@ -23,5 +23,4 @@
         android:onClick="tellJoke"
         android:text="@string/button_text" />
 
-
 </RelativeLayout>
