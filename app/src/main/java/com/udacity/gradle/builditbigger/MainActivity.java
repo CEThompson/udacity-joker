@@ -1,8 +1,12 @@
 package com.udacity.gradle.builditbigger;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Pair;
@@ -11,21 +15,37 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.android.jokedisplay.DisplayActivity;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
+import com.udacity.gradle.builditbigger.test.SimpleIdlingResource;
+import com.udacity.gradle.builditbigger.utils.keys;
 
 import java.io.IOException;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EndpointsAsyncTask.callback {
+
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
+    @VisibleForTesting
+    @Nullable
+    public IdlingResource getIdlingResource(){
+        if (mIdlingResource == null){
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getIdlingResource();
     }
 
 
@@ -52,15 +72,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        //JokeProvider jokeProvider = new JokeProvider();
-        //Toast.makeText(this, jokeProvider.getJoke(), Toast.LENGTH_SHORT).show();
-
-        //String joke = jokeProvider.getJoke();
-        //Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
-        //intent.putExtra(keys.joke_key, joke);
-
-        //startActivity(intent);
         new EndpointsAsyncTask().execute(this);
     }
 
+    @Override
+    public void idleComplete() {
+        try {
+            mIdlingResource.setIdleState(true);
+        } catch (NullPointerException n){
+            Log.e("MainActivity", n.getMessage());
+        }
+    }
 }
