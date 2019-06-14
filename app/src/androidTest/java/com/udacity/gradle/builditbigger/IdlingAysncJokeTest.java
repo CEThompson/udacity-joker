@@ -41,7 +41,7 @@ public class IdlingAysncJokeTest {
 
         /* Perform click on recycler view position 0 after loading from network */
         onView(withId(R.id.joke_button)).perform(click());
-        onView(withId(R.id.joke_tv)).check(matches(withText(containsString("TEMPORARY HILARIOUS JOKE"))));
+
     }
 
     @After

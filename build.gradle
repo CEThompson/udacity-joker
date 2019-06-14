@@ -20,3 +20,17 @@ allprojects {
         google()
     }
 }
+
+
+task allTogether (dependsOn:
+        [':backend:appengineStart',
+         ':app:test',
+         ':app:connectedAndroidTest']) {
+    group = 'custom_tasks'
+    description = "Launches server, runs tests, then stops server"
+
+    finalizedBy ':backend:appengineStop'
+}
+
+
+

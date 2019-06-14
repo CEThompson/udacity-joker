@@ -9,17 +9,34 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.udacity.gradle.builditbigger.test.SimpleIdlingResource;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    private ProgressBar mPb;
+    private Button mButton;
+    private TextView mTv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        mPb = (ProgressBar) findViewById(R.id.loading_joke_progress_bar);
+        mButton = (Button) findViewById(R.id.joke_button);
+        mTv = (TextView) findViewById(R.id.instructions_text_view);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideLoading();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -44,7 +61,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
+        showLoading();
         new EndpointsAsyncTask().execute(this);
+    }
+
+    public void showLoading(){
+        mPb.setVisibility(View.VISIBLE);
+        mButton.setVisibility(View.INVISIBLE);
+        mTv.setVisibility(View.INVISIBLE);
+    }
+
+    public void hideLoading(){
+        mPb.setVisibility(View.INVISIBLE);
+        mButton.setVisibility(View.VISIBLE);
+        mTv.setVisibility(View.VISIBLE);
     }
 
 }

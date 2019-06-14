@@ -3,10 +3,7 @@ package com.udacity.gradle.builditbigger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.test.espresso.IdlingResource;
-import android.support.v4.util.Pair;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.android.jokedisplay.DisplayActivity;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -56,17 +53,16 @@ class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
 
     @Override
     protected void onPostExecute(String joke) {
-        //Toast.makeText(context, joke, Toast.LENGTH_LONG).show();
-        //Log.e("EndpointsAsyncTask", joke);
-
-
         Intent intent = new Intent(context, DisplayActivity.class);
         intent.putExtra(keys.joke_key, joke);
-        context.startActivity(intent);
+
+        MainActivity activity = (MainActivity) context;
+        activity.hideLoading();
+        activity.idleComplete();
+
+        activity.startActivity(intent);
+
     }
 
-    public interface callback {
-        void idleComplete();
-    }
 }
 
