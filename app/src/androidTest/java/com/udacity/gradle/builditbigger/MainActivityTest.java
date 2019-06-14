@@ -13,13 +13,11 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.containsString;
 
 @RunWith(AndroidJUnit4.class)
-public class IdlingAysncJokeTest {
+public class MainActivityTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mRecipeActivityTestRule
@@ -28,20 +26,25 @@ public class IdlingAysncJokeTest {
     private IdlingResource mIdlingResource;
     private IdlingRegistry mIdlingRegistry;
 
+    @Test
+    public void clickJokeButton_startsAsyncTask(){
+        // Clicking joke button starts the interstitial ad
+        onView(withId(R.id.joke_button)).perform(click());
+        // Closing the ad begins the async task
+        onView(isRoot()).perform(click());
+    }
+
     @Before
     public void registerIdlingResource(){
-
         mIdlingResource = mRecipeActivityTestRule.getActivity().getIdlingResource();
         mIdlingRegistry = IdlingRegistry.getInstance();
         mIdlingRegistry.register(mIdlingResource);
     }
 
     @Test
-    public void clickGetJokeButton_DisplayActivity(){
-
-        /* Perform click on recycler view position 0 after loading from network */
-        onView(withId(R.id.joke_button)).perform(click());
-
+    public void afterIdling_shouldDisplayJoke(){
+        String retrievedJoke = mRecipeActivityTestRule.getActivity().mJoke;
+        assert(retrievedJoke != null && !retrievedJoke.equals(""));
     }
 
     @After
