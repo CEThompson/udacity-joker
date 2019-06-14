@@ -57,7 +57,6 @@ android {
             versionNameSuffix "-free"
             //applicationId "com.udacity.gradle.builditbigger.free"
         }
-
     }
 }
 

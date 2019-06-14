@@ -21,14 +21,20 @@ allprojects {
     }
 }
 
-
-task allTogether (dependsOn:
-        [':backend:appengineStart',
-         ':app:test',
-         ':app:connectedAndroidTest']) {
+task allTogether (dependsOn: ':backend:appengineStart') {
     group = 'custom_tasks'
     description = "Launches server, runs tests, then stops server"
+    finalizedBy 'runDebugTests'
+}
 
+task runDebugTests (dependsOn:
+    [':app:testFreeDebugUnitTest',
+     ':app:testPaidDebugUnitTest',
+     ':app:connectedFreeDebugAndroidTest',
+     ':app:connectedPaidDebugAndroidTest']){
+
+    group = 'custom_tasks'
+    description = "Runs unit and connected tests for debug"
     finalizedBy ':backend:appengineStop'
 }
 
