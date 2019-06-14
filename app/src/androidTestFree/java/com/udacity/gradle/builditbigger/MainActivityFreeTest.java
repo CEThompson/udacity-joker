@@ -17,7 +17,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest {
+public class MainActivityFreeTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mRecipeActivityTestRule
