@@ -1,12 +1,8 @@
 package com.udacity.gradle.builditbigger;
 
-import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,16 +19,6 @@ public class MainActivityFreeTest {
     public ActivityTestRule<MainActivity> mRecipeActivityTestRule
             = new ActivityTestRule<>(MainActivity.class);
 
-    private IdlingResource mIdlingResource;
-    private IdlingRegistry mIdlingRegistry;
-
-    @Before
-    public void registerIdlingResource(){
-        mIdlingResource = mRecipeActivityTestRule.getActivity().getIdlingResource();
-        mIdlingRegistry = IdlingRegistry.getInstance();
-        mIdlingRegistry.register(mIdlingResource);
-    }
-
     /* This test begins the async task to retrieve the joke */
     @Test
     public void clickJokeButton_startsAsyncTask(){
@@ -46,13 +32,6 @@ public class MainActivityFreeTest {
     public void afterIdling_shouldDisplayJoke(){
         String retrievedJoke = mRecipeActivityTestRule.getActivity().mJoke;
         assert(retrievedJoke != null && !retrievedJoke.equals(""));
-    }
-
-    @After
-    public void unregisterIdlingResource(){
-        if (mIdlingResource!=null){
-            mIdlingRegistry.unregister(mIdlingResource);
-        }
     }
 
 }

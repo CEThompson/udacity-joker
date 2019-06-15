@@ -35,8 +35,8 @@ task runDebugTests (dependsOn:
 
     group = 'custom_tasks'
     description = "Runs unit and connected tests for debug"
-    finalizedBy ':backend:appengineStop'
 }
 
+runDebugTests.finalizedBy ':backend:appengineStop'
 
 

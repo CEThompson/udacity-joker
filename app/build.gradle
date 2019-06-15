@@ -76,9 +76,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     implementation project (":jokedisplay")
-
-    // Import idling resource for testing
-    debugImplementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
-    testImplementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
 }
 

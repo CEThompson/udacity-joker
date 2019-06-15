@@ -2,11 +2,7 @@ package com.udacity.gradle.builditbigger;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,8 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.jokedisplay.DisplayActivity;
-import com.udacity.gradle.builditbigger.test.SimpleIdlingResource;
-import com.udacity.gradle.builditbigger.utils.keys;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,18 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mButton;
     private TextView mTv;
 
-    /* This block (variables and idling method) used for testing */
-    @Nullable
-    private SimpleIdlingResource mIdlingResource;
+    /* This block variable used for testing */
     public String mJoke;
-    @VisibleForTesting
-    @Nullable
-    public IdlingResource getIdlingResource(){
-        if (mIdlingResource == null){
-            mIdlingResource = new SimpleIdlingResource();
-        }
-        return mIdlingResource;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
         mButton = findViewById(R.id.joke_button);
         mTv = findViewById(R.id.instructions_text_view);
 
-        // Initialize the idling resource for testing
-        getIdlingResource();
     }
 
     @Override
@@ -89,15 +71,13 @@ public class MainActivity extends AppCompatActivity {
      start the joke display activity */
     public void taskComplete(String jokeResult) {
 
-        /* This block used to test the async task result */
+        /* This used to test the async task result */
         mJoke = jokeResult;
-        try { mIdlingResource.setIdleState(true);}
-        catch (NullPointerException n){ Log.e(TAG, n.getMessage()); }
 
         /* This block used to handle loading bar and activity */
         hideLoading();
         Intent intent = new Intent(this, DisplayActivity.class);
-        intent.putExtra(keys.joke_key, jokeResult);
+        intent.putExtra(getString(R.string.joke_key), jokeResult);
         startActivity(intent);
     }
 
