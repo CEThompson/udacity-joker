@@ -26,19 +26,20 @@ public class MainActivityFreeTest {
     private IdlingResource mIdlingResource;
     private IdlingRegistry mIdlingRegistry;
 
+    @Before
+    public void registerIdlingResource(){
+        mIdlingResource = mRecipeActivityTestRule.getActivity().getIdlingResource();
+        mIdlingRegistry = IdlingRegistry.getInstance();
+        mIdlingRegistry.register(mIdlingResource);
+    }
+
+    /* This test begins the async task to retrieve the joke */
     @Test
     public void clickJokeButton_startsAsyncTask(){
         // Clicking joke button starts the interstitial ad
         onView(withId(R.id.joke_button)).perform(click());
         // Closing the ad begins the async task
         onView(isRoot()).perform(click());
-    }
-
-    @Before
-    public void registerIdlingResource(){
-        mIdlingResource = mRecipeActivityTestRule.getActivity().getIdlingResource();
-        mIdlingRegistry = IdlingRegistry.getInstance();
-        mIdlingRegistry.register(mIdlingResource);
     }
 
     @Test

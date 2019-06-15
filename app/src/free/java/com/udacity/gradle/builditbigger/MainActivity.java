@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAdClosed() {
                 showLoading();
+                try { mIdlingResource.setIdleState(false);}
+                catch (NullPointerException n){ Log.e(TAG, n.getMessage()); }
                 new EndpointsAsyncTask().execute(context);
             }
         });

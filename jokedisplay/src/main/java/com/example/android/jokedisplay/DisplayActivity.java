@@ -15,13 +15,10 @@ public class DisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
 
-        TextView tv = (TextView) findViewById(R.id.joke_tv);
-
-
-        String joke = "no joke set";
+        TextView tv = findViewById(R.id.joke_tv);
 
         Intent intent = getIntent();
-        joke = intent.getStringExtra(joke_key);
+        String joke = intent.getStringExtra(joke_key);
 
         tv.setText(joke);
 
