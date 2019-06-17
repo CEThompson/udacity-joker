@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">My Library</string>
     <string name="joke_key" translatable="false">joke</string>
-    <string name="error_retrieving_joke">Error retrieving joke from library.</string>
+    <string name="library_error">Error retrieving joke from library.</string>
+    <string name="intent_error">Error retrieving the joke from the intent.</string>
 </resources>

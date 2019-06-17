@@ -22,7 +22,10 @@ public class DisplayActivity extends AppCompatActivity {
         if (intent.hasExtra(getString(R.string.joke_key)))
             joke = intent.getStringExtra(getString(R.string.joke_key));
         else
-            joke = getString(R.string.error_retrieving_joke);
+            joke = getString(R.string.intent_error);
+
+        if (joke.isEmpty())
+            joke = getString(R.string.library_error);
 
         tv.setText(joke);
 
