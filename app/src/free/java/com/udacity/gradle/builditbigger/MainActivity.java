@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
 
         // Set up the interstitial ad
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getString(R.string.banner_ad_unit_id));
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
     }
 
     @Override
