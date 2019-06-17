@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
     protected void onResume() {
         super.onResume();
         hideLoading();
+        mInterstitialAd.setAdListener(null);
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
