@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
         /* This block used to handle loading bar and activity */
         Intent intent = new Intent(this, DisplayActivity.class);
         intent.putExtra(getString(R.string.joke_key), jokeResult);
-        //hideLoading(); // hide the loading indicator
         startActivity(intent); // then start the activity
     }
 

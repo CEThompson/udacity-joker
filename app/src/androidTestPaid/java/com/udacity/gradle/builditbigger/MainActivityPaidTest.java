@@ -30,7 +30,6 @@ public class MainActivityPaidTest {
 
         /* 2. Retrieve the joke from the activity */
         String retrievedJoke = mRecipeActivityTestRule.getActivity().mJoke;
-        Log.d("MainActivityPaidTest", "retrievedJoke is: " + retrievedJoke);
 
         /* 3. Assert the joke is neither null or empty */
         assertNotNull(retrievedJoke);

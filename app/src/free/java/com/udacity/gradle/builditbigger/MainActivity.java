@@ -3,6 +3,9 @@ package com.udacity.gradle.builditbigger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,8 +28,24 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
     private Button mButton;
     private TextView mTv;
 
-    /* This variable used for testing */
-    public String mJoke;
+    /* This block used for testing */
+    @Nullable
+    private CountingIdlingResource mIdlingResource;
+    @VisibleForTesting
+    @Nullable
+    public CountingIdlingResource getIdlingResource(){
+        if (mIdlingResource == null)
+            mIdlingResource = new CountingIdlingResource("name");
+        return mIdlingResource;
+    }
+    private void incrementIdlingResource(){
+        if (mIdlingResource!=null)
+            mIdlingResource.increment();
+    }
+    private void decrementIdlingResource(){
+        if (mIdlingResource!=null)
+            mIdlingResource.decrement();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,31 +92,68 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
 
     public void tellJoke(View view) {
         final Context context = this;
-        // Load the joke after the ad
-        mInterstitialAd.setAdListener(new AdListener(){
-            @Override
-            public void onAdClosed() {
-                showLoading();
-                EndpointsAsyncTask jokeTask = new EndpointsAsyncTask(context);
-                jokeTask.execute();
-            }
-        });
+        // For beginning the ad test
+        incrementIdlingResource();
 
+        // If the interstitial ad is already loaded
+        // Set a listener for its close and show it
         if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.setAdListener(new AdListener(){
+                @Override
+                public void onAdClosed() {
+                    // For beginning joke retrieval test
+                    incrementIdlingResource();
+
+                    showLoading();
+                    EndpointsAsyncTask jokeTask = new EndpointsAsyncTask(context);
+                    jokeTask.execute();
+                }
+            });
+
             mInterstitialAd.show();
+
+            // For ending the ad test
+            decrementIdlingResource();
+        }
+
+        // Otherwise set a listener for its close then
+        // Set a listener for the ad loading
+        // And hide the button
+        else {
+            showLoading();
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    // For beginning joke retrieval test
+                    incrementIdlingResource();
+
+                    showLoading();
+                    EndpointsAsyncTask jokeTask = new EndpointsAsyncTask(context);
+                    jokeTask.execute();
+                }
+
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                    mInterstitialAd.show();
+
+                    // For ending the ad test
+                    decrementIdlingResource();
+                }
+            });
         }
     }
 
     /* Async task uses this method to hide the loading bar and
      start the joke display activity */
     public void taskComplete(String jokeResult) {
-        /* This used to test the async task result */
-        mJoke = jokeResult;
-
         /* This block used to handle loading bar and activity */
         Intent intent = new Intent(this, DisplayActivity.class);
         intent.putExtra(getString(R.string.joke_key), jokeResult);
         startActivity(intent);
+
+        // For ending the joke retrieval test
+        decrementIdlingResource();
     }
 
     public void showLoading(){

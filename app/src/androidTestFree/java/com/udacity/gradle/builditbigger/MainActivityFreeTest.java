@@ -1,37 +1,61 @@
 package com.udacity.gradle.builditbigger;
 
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.containsString;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityFreeTest {
+
+    private CountingIdlingResource mIdlingResource;
 
     @Rule
     public ActivityTestRule<MainActivity> mRecipeActivityTestRule
             = new ActivityTestRule<>(MainActivity.class);
 
-    /* This test begins the async task to retrieve the joke */
-    @Test
-    public void clickJokeButton_startsAsyncTask(){
-        // Clicking joke button starts the interstitial ad
+    @Before
+    public void registerIdlingResource(){
+        mIdlingResource = mRecipeActivityTestRule.getActivity().getIdlingResource();
+        Espresso.registerIdlingResources(mIdlingResource);
+    }
+
+    public void clickingJokeButton_loadsAd(){
         onView(withId(R.id.joke_button)).perform(click());
-        // Closing the ad begins the async task
-        onView(isRoot()).perform(click());
     }
 
     @Test
-    public void afterIdling_shouldDisplayJoke(){
-        String retrievedJoke = mRecipeActivityTestRule.getActivity().mJoke;
-        assert(retrievedJoke != null && !retrievedJoke.equals(""));
+    public void closingAd_getsJokeWithTask(){
+        /* 1. Click the back button to close the ad:
+         *    This loads the async task and triggers
+         *    Espresso to wait until completion. */
+        onView(isRoot()).perform(click());
+
+        /* 2. Assert the joke matches the joke from the library */
+        onView(withId(R.id.joke_tv))
+                .check(matches(withText(containsString(
+                        "TO GET TO THE OTHER SIDE!"))));
+    }
+
+    @After
+    public void unregisterIdlingResource(){
+        if (mIdlingResource != null){
+            Espresso.unregisterIdlingResources(mIdlingResource);
+        }
     }
 
 }
