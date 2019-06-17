@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">My Library</string>
     <string name="joke_key" translatable="false">joke</string>
+    <string name="error_retrieving_joke">Error retrieving joke from library.</string>
 </resources>

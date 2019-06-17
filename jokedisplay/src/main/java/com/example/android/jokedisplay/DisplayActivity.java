@@ -16,7 +16,13 @@ public class DisplayActivity extends AppCompatActivity {
         TextView tv = findViewById(R.id.joke_tv);
 
         Intent intent = getIntent();
-        String joke = intent.getStringExtra(getString(R.string.joke_key));
+
+        String joke;
+        
+        if (intent.hasExtra(getString(R.string.joke_key)))
+            joke = intent.getStringExtra(getString(R.string.joke_key));
+        else
+            joke = getString(R.string.error_retrieving_joke);
 
         tv.setText(joke);
 
