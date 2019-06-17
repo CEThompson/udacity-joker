@@ -18,7 +18,7 @@ public class DisplayActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         String joke;
-        
+
         if (intent.hasExtra(getString(R.string.joke_key)))
             joke = intent.getStringExtra(getString(R.string.joke_key));
         else
