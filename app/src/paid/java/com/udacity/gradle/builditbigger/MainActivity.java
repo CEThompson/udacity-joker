@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.android.jokedisplay.DisplayActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EndpointsAsyncTask.OnJokeRetrievedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        hideLoading();
     }
 
     @Override
@@ -63,22 +64,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void tellJoke(View view) {
         showLoading();
-        new EndpointsAsyncTask().execute(this);
-
+        EndpointsAsyncTask jokeTask = new EndpointsAsyncTask(this);
+        jokeTask.execute();
     }
 
     /* Async task uses this method to hide the loading bar and
      start the joke display activity */
     public void taskComplete(String jokeResult) {
-
         /* This used to test the async task result */
         mJoke = jokeResult;
 
         /* This block used to handle loading bar and activity */
-        hideLoading();
         Intent intent = new Intent(this, DisplayActivity.class);
         intent.putExtra(getString(R.string.joke_key), jokeResult);
-        startActivity(intent);
+        //hideLoading(); // hide the loading indicator
+        startActivity(intent); // then start the activity
     }
 
     public void showLoading(){

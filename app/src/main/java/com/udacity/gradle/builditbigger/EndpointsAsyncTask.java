@@ -12,14 +12,28 @@ import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 
 import java.io.IOException;
 
-class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
+class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
     private static MyApi myApiService = null;
-    private Context context;
 
     private static final String TAG = EndpointsAsyncTask.class.getSimpleName();
 
+    private OnJokeRetrievedListener mCallback;
+
+    public interface OnJokeRetrievedListener {
+        void taskComplete(String joke);
+    }
+
+    public EndpointsAsyncTask(Context context){
+        try {
+            mCallback = (OnJokeRetrievedListener) context;
+        } catch (ClassCastException E){
+            throw new ClassCastException(context.toString()
+            + "must implement OnJokeRetrievedListener");
+        }
+    }
+
     @Override
-    protected String doInBackground(Context... params) {
+    protected String doInBackground(Void... params) {
         if (myApiService == null) {
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
@@ -33,8 +47,6 @@ class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
             myApiService = builder.build();
         }
 
-        context = params[0];
-
         try {
             Log.e(TAG, "Getting joke from service.");
             return myApiService.getJoke().execute().getData();
@@ -46,8 +58,7 @@ class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
 
     @Override
     protected void onPostExecute(String joke) {
-        MainActivity activity = (MainActivity) context;
-        activity.taskComplete(joke);
+        mCallback.taskComplete(joke);
     }
 
 }

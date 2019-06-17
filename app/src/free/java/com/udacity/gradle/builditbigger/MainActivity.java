@@ -16,7 +16,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EndpointsAsyncTask.OnJokeRetrievedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
     /* This variable used for testing */
     public String mJoke;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        hideLoading();
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
@@ -73,29 +73,28 @@ public class MainActivity extends AppCompatActivity {
 
     public void tellJoke(View view) {
         final Context context = this;
-
         // Load the joke after the ad
         mInterstitialAd.setAdListener(new AdListener(){
             @Override
             public void onAdClosed() {
                 showLoading();
-                new EndpointsAsyncTask().execute(context);
+                EndpointsAsyncTask jokeTask = new EndpointsAsyncTask(context);
+                jokeTask.execute();
             }
         });
 
-        if (mInterstitialAd.isLoaded())
+        if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
+        }
     }
 
     /* Async task uses this method to hide the loading bar and
      start the joke display activity */
     public void taskComplete(String jokeResult) {
-
         /* This used to test the async task result */
         mJoke = jokeResult;
 
         /* This block used to handle loading bar and activity */
-        hideLoading();
         Intent intent = new Intent(this, DisplayActivity.class);
         intent.putExtra(getString(R.string.joke_key), jokeResult);
         startActivity(intent);
