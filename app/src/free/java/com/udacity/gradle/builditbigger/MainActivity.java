@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
     /* This block used for testing */
     @Nullable
     private CountingIdlingResource mIdlingResource;
+    public String mJoke;
+    public boolean mAdDisplayed = false;
     @VisibleForTesting
     @Nullable
     public CountingIdlingResource getIdlingResource(){
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
             mIdlingResource = new CountingIdlingResource("name");
         return mIdlingResource;
     }
-    private void incrementIdlingResource(){
+    public void incrementIdlingResource(){
         if (mIdlingResource!=null)
             mIdlingResource.increment();
     }
@@ -93,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
 
     public void tellJoke(View view) {
         final Context context = this;
+
         // For beginning the ad test
         incrementIdlingResource();
 
@@ -102,15 +105,14 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
             mInterstitialAd.setAdListener(new AdListener(){
                 @Override
                 public void onAdClosed() {
-                    // For beginning joke retrieval test
-                    incrementIdlingResource();
-
+                    mAdDisplayed = false;
                     showLoading();
                     EndpointsAsyncTask jokeTask = new EndpointsAsyncTask(context);
                     jokeTask.execute();
                 }
             });
 
+            mAdDisplayed = true;
             mInterstitialAd.show();
 
             // For ending the ad test
@@ -125,9 +127,7 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
             mInterstitialAd.setAdListener(new AdListener() {
                 @Override
                 public void onAdClosed() {
-                    // For beginning joke retrieval test
-                    incrementIdlingResource();
-
+                    mAdDisplayed = false;
                     showLoading();
                     EndpointsAsyncTask jokeTask = new EndpointsAsyncTask(context);
                     jokeTask.execute();
@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
                 @Override
                 public void onAdLoaded() {
                     super.onAdLoaded();
+                    mAdDisplayed = true;
                     mInterstitialAd.show();
 
                     // For ending the ad test
@@ -148,13 +149,12 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
     /* Async task uses this method to hide the loading bar and
      start the joke display activity */
     public void taskComplete(String jokeResult) {
+        mJoke = jokeResult;
+
         /* This block used to handle loading bar and activity */
         Intent intent = new Intent(this, DisplayActivity.class);
         intent.putExtra(getString(R.string.joke_key), jokeResult);
         startActivity(intent);
-
-        // For ending the joke retrieval test
-        decrementIdlingResource();
     }
 
     public void showLoading(){
