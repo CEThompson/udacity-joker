@@ -49,13 +49,11 @@ android {
             dimension "version"
             applicationIdSuffix ".paid"
             versionNameSuffix "-paid"
-            //applicationId "com.udacity.gradle.builditbigger.paid"
         }
         free {
             dimension "version"
             applicationIdSuffix ".free"
             versionNameSuffix "-free"
-            //applicationId "com.udacity.gradle.builditbigger.free"
         }
     }
 }
